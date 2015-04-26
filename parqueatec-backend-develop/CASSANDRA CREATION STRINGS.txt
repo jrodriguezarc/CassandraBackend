@@ -1,0 +1,67 @@
+CREATE KEYSPACE parqueatec WITH REPLICATION = {'class':'SimpleStrategy','replication_factor':1};
+
+USE parqueatec;
+
+CREATE TABLE Organizations(id uuid, name text, creation_date timestamp, enabled boolean, photos set<blob>, logo blob, bussiness_area text, country text, state_province text, city text, PRIMARY KEY(id));
+
+CREATE TABLE Locations(id uuid, name text, org_id uuid, headquarter boolean, contact_email text, contact_phone text, contact_name text, boundaries text, country text, state_province text, city text, address text, creation_date timestamp, devices_stored int, devices_off int, enabled boolean, devices set<text>, PRIMARY KEY (id));
+
+CREATE TABLE Parking_Lots(id uuid, name text, loc_id uuid, org_id uuid, boundaries text, creation_date timestamp, enabled boolean, PRIMARY KEY(id));
+
+CREATE TABLE Spots(id uuid, par_id uuid, loc_id uuid, org_id uuid, code text, latitude text, longitude text, creation_date timestamp, enabled boolean, status boolean, dev_id uuid, PRIMARY KEY(id));
+
+CREATE TABLE Devices(id uuid, status boolean, failures int, reset_times int, working boolean, PRIMARY KEY(id));
+
+CREATE TABLE Users(id uuid, contact_email text, contact_phone text, first_name text, last_name text, username text, password text, rol int, org_id uuid, creation_date timestamp, enabled boolean, PRIMARY KEY(id));
+
+CREATE TABLE Movements(id uuid, use_id uuid, arrival_time timestamp, spo_id uuid, par_id uuid, loc_id uuid, org_id uuid, departure_time timestamp, PRIMARY KEY(id));
+
+CREATE TABLE Log(id uuid, request text, action text, source_ip text, username text, org_id uuid, loc_id uuid, org boolean, loc boolean, date timestamp, PRIMARY KEY(id));
+
+CREATE TABLE Failures(id uuid, dev_id uuid, date timestamp, detail text, use_id uuid, PRIMARY KEY(id));
+
+CREATE INDEX ON Organizations(name);
+CREATE INDEX ON Organizations(bussiness_area);
+CREATE INDEX ON Organizations(country);
+CREATE INDEX ON Organizations(state_province);
+CREATE INDEX ON Organizations(city);
+CREATE INDEX ON Organizations(enabled);
+CREATE INDEX ON Locations(name);
+CREATE INDEX ON Locations(org_id);
+CREATE INDEX ON Locations(headquarter);
+CREATE INDEX ON Locations(country);
+CREATE INDEX ON Locations(state_province);
+CREATE INDEX ON Locations(city);
+CREATE INDEX ON Locations(address);
+CREATE INDEX ON Locations(enabled);
+CREATE INDEX ON Parking_Lots(name);
+CREATE INDEX ON Parking_Lots(loc_id);
+CREATE INDEX ON Parking_Lots(org_id);
+CREATE INDEX ON Parking_Lots(enabled);
+CREATE INDEX ON Spots(par_id);
+CREATE INDEX ON Spots(loc_id);
+CREATE INDEX ON Spots(org_id);
+CREATE INDEX ON Spots(creation_date);
+CREATE INDEX ON Spots(status);
+CREATE INDEX ON Spots(dev_id);
+CREATE INDEX ON Spots(enabled);
+CREATE INDEX ON Devices(status);
+CREATE INDEX ON Devices(working);
+CREATE INDEX ON Users(username);
+CREATE INDEX ON Users(password);
+CREATE INDEX ON Users(rol);
+CREATE INDEX ON Users(creation_date);
+CREATE INDEX ON Users(org_id);
+CREATE INDEX ON Users(enabled);
+CREATE INDEX ON Movements(use_id);
+CREATE INDEX ON Movements(spo_id);
+CREATE INDEX ON Movements(par_id);
+CREATE INDEX ON Movements(loc_id);
+CREATE INDEX ON Movements(org_id);
+CREATE INDEX ON Log(source_ip);
+CREATE INDEX ON Log(username);
+CREATE INDEX ON Log(org_id);
+CREATE INDEX ON Log(org);
+CREATE INDEX ON Log(action);
+CREATE INDEX ON Failures(dev_id);
+CREATE INDEX ON Failures(use_id);
